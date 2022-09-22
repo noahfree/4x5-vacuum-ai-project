@@ -37,25 +37,21 @@ class Env:
     def get_cost(self):
         return self.total_cost
     def move_left(self):
-        if (self.position.Y != 0):
-            self.position.Y -= 1
-            self.total_cost += Action.LEFT.value
-            self.path.append('LEFT')
+        self.position.Y -= 1
+        self.total_cost += Action.LEFT.value
+        self.path.append('LEFT')
     def move_right(self):
-        if (self.position.Y != 4):
-            self.position.Y += 1
-            self.total_cost += Action.RIGHT.value
-            self.path.append('RIGHT')
+        self.position.Y += 1
+        self.total_cost += Action.RIGHT.value
+        self.path.append('RIGHT')
     def move_up(self):
-        if (self.position.X != 0):
-            self.position.X -= 1
-            self.total_cost += Action.UP.value
-            self.path.append('UP')
+        self.position.X -= 1
+        self.total_cost += Action.UP.value
+        self.path.append('UP')
     def move_down(self):
-        if (self.position.X != 3):
-            self.position.X += 1
-            self.total_cost += Action.DOWN.value
-            self.path.append('DOWN')
+        self.position.X += 1
+        self.total_cost += Action.DOWN.value
+        self.path.append('DOWN')
     def clean_room(self):
         self.total_cost += Action.SUCK.value
         if (self.matrix[self.position.X][self.position.Y] == 'dirty'):
@@ -126,6 +122,7 @@ def select_node(fringe):
 	return selected
 
 def uniform_graph_search(state, fringe, num_of_dirty_rooms):
+    start_time = time.time()
     expanded_count = 0
     generated_count = 0
     goal = []
@@ -133,7 +130,7 @@ def uniform_graph_search(state, fringe, num_of_dirty_rooms):
     fringe.append(state)
     while len(fringe) > 0:
         node = fringe.pop(select_node(fringe))
-        if (node.rooms_cleaned == num_of_dirty_rooms):
+        if (node.rooms_cleaned == num_of_dirty_rooms or (time.time() - start_time) > 3600):
             print("   Generated Count => " + str(generated_count))
             print("   Expanded Count => " + str(expanded_count))
             return node
@@ -144,13 +141,14 @@ def uniform_graph_search(state, fringe, num_of_dirty_rooms):
     return None
 
 def uniform_tree_search(state, fringe, num_of_dirty_rooms):
+    start_time = time.time()
     expanded_count = 0
     generated_count = 0
     goal = []
     fringe.append(state)
     while len(fringe) > 0:
         node = fringe.pop(select_node(fringe))
-        if (node.rooms_cleaned == num_of_dirty_rooms):
+        if (node.rooms_cleaned == num_of_dirty_rooms or (time.time() - start_time) > 3600):
             print("   Generated Count => " + str(generated_count))
             print("   Expanded Count => " + str(expanded_count))
             return node
@@ -158,20 +156,7 @@ def uniform_tree_search(state, fringe, num_of_dirty_rooms):
         expanded_count += 1
     return None
 
-def iterative_deepening_search(state, closed, num_of_dirty_rooms, layer):
-    print(layer)
-    state.layer = 0
-    fringe = [state]
-    while len(fringe) > 0:
-        node = fringe.pop(0)
-        if node.layer > layer:
-            break
-        if (node.rooms_cleaned == num_of_dirty_rooms):
-            return node
-        if (not compare_states(node, closed)):
-            closed.append(node)
-            expand_node(node, fringe, node.layer+1)
-    return iterative_deepening_search(state, closed, num_of_dirty_rooms, layer+1)
+
 
 def print_info(goal, start_time, end_time):
     print('   Goal path =>', end=' ')
@@ -184,36 +169,36 @@ def print_info(goal, start_time, end_time):
 
 
 def main():
-    print('\nInstance 1 - Uniform Tree Search:')
-    start = time.time()
-    instance_1 = Env(1, 1)
-    instance_1.set_dirt(0, 1)
-    instance_1.set_dirt(1, 3)
-    instance_1.set_dirt(2, 4)
-    goal = uniform_tree_search(instance_1, [], 3)
-    end = time.time()
-    print_info(goal, start, end)
-
-    print('\nInstance 1 - Uniform Graph Search:')
-    instance_1 = Env(1, 1)
-    instance_1.set_dirt(0, 1)
-    instance_1.set_dirt(1, 3)
-    instance_1.set_dirt(2, 4)
-    start = time.time()
-    goal = uniform_graph_search(instance_1, [], 3)
-    end = time.time()
-    print_info(goal, start, end)
-
-    # print('\nInstance 1 - Iterative Deepening Search:')
+    # print('\nInstance 1 - Uniform Tree Search:')
     # start = time.time()
     # instance_1 = Env(1, 1)
-    # instance_1.set_dirt(1, 1)
-    # # instance_1.set_dirt(0, 1)
-    # # instance_1.set_dirt(1, 3)
-    # # instance_1.set_dirt(2, 4)
-    # goal = iterative_deepening_search(instance_1, [], 1, 0)
+    # instance_1.set_dirt(0, 1)
+    # instance_1.set_dirt(1, 3)
+    # instance_1.set_dirt(2, 4)
+    # goal = uniform_tree_search(instance_1, [], 3)
     # end = time.time()
     # print_info(goal, start, end)
+	#
+    # print('\nInstance 1 - Uniform Graph Search:')
+    # instance_1 = Env(1, 1)
+    # instance_1.set_dirt(0, 1)
+    # instance_1.set_dirt(1, 3)
+    # instance_1.set_dirt(2, 4)
+    # start = time.time()
+    # goal = uniform_graph_search(instance_1, [], 3)
+    # end = time.time()
+    # print_info(goal, start, end)
+
+    print('\nInstance 1 - Iterative Deepening Search:')
+    start = time.time()
+    instance_1 = Env(1, 1)
+    # instance_1.set_dirt(1, 1)
+    instance_1.set_dirt(0, 1)
+    # instance_1.set_dirt(1, 3)
+    # instance_1.set_dirt(2, 4)
+    goal = iterative_deepening_search(instance_1, 1)
+    end = time.time()
+    print_info(goal, start, end)
 
     # print('\nInstance 2 - Uniform Graph Search:')
     # start = time.time()
@@ -223,6 +208,17 @@ def main():
     # instance_2.set_dirt(1, 3)
     # instance_2.set_dirt(2, 2)
     # goal = uniform_graph_search(instance_2, [], 4)
+    # end = time.time()
+    # print_info(goal, start, end)
+
+    # print('\nInstance 2 - Uniform Tree Search:')
+    # start = time.time()
+    # instance_2 = Env(2, 1)
+    # instance_2.set_dirt(0, 1)
+    # instance_2.set_dirt(1, 0)
+    # instance_2.set_dirt(1, 3)
+    # instance_2.set_dirt(2, 2)
+    # goal = uniform_tree_search(instance_2, [], 4)
     # end = time.time()
     # print_info(goal, start, end)
 
