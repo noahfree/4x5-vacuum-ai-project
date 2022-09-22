@@ -88,25 +88,25 @@ def expand_node(state, fringe, layer):
         new_state.layer = layer
         fringe.append(new_state)
         return 1
-    if (state.get_Y() != 0):
+    if (state.get_Y() != 0 and (len(state.path) == 0 or state.path[len(state.path) - 1] != 'RIGHT')):
         new_state = copy.deepcopy(state)
         new_state.move_left()
         new_state.layer = layer
         fringe.append(new_state)
         generated_count += 1
-    if (state.get_Y() != 4):
+    if (state.get_Y() != 4 and (len(state.path) == 0 or state.path[len(state.path) - 1] != 'LEFT')):
         new_state = copy.deepcopy(state)
         new_state.move_right()
         new_state.layer = layer
         fringe.append(new_state)
         generated_count += 1
-    if (state.get_X() != 0):
+    if (state.get_X() != 0 and (len(state.path) == 0 or state.path[len(state.path) - 1] != 'DOWN')):
         new_state = copy.deepcopy(state)
         new_state.move_up()
         new_state.layer = layer
         fringe.append(new_state)
         generated_count += 1
-    if (state.get_X() != 3):
+    if (state.get_X() != 3 and (len(state.path) == 0 or state.path[len(state.path) - 1] != 'UP')):
         new_state = copy.deepcopy(state)
         new_state.move_down()
         new_state.layer = layer
