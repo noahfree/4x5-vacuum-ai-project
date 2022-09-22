@@ -118,6 +118,13 @@ def expand_node(state, fringe, layer):
         generated_count += 1
     return generated_count
 
+def select_node(fringe):
+	selected = 0
+	for i in range(len(fringe)):
+		if fringe[i].total_cost < fringe[selected].total_cost:
+			selected = i
+	return selected
+
 def uniform_graph_search(state, fringe, num_of_dirty_rooms):
     expanded_count = 0
     generated_count = 0
@@ -125,10 +132,7 @@ def uniform_graph_search(state, fringe, num_of_dirty_rooms):
     closed = []
     fringe.append(state)
     while len(fringe) > 0:
-        #print("FRINGE COUNT: " + str(len(fringe)))
-        #print("CLOSED COUNT: " + str(len(closed)) + "\n")
-        fringe.sort(key=lambda x: x.total_cost)
-        node = fringe.pop(0)
+        node = fringe.pop(select_node(fringe))
         if (node.rooms_cleaned == num_of_dirty_rooms):
             print("   Generated Count => " + str(generated_count))
             print("   Expanded Count => " + str(expanded_count))
@@ -144,21 +148,15 @@ def uniform_tree_search(state, fringe, num_of_dirty_rooms):
     generated_count = 0
     goal = []
     fringe.append(state)
-    while True:
-        #print("FRINGE COUNT: " + str(len(fringe)))
-        #print("CLOSED COUNT: " + str(len(closed)) + "\n")
-        if len(fringe) == 0:
-            print("   Generated Count => " + str(generated_count))
-            print("   Expanded Count => " + str(expanded_count))
-            return goal
-        fringe.sort(key=lambda x: x.total_cost)
-        node = fringe.pop(0)
+    while len(fringe) > 0:
+        node = fringe.pop(select_node(fringe))
         if (node.rooms_cleaned == num_of_dirty_rooms):
             print("   Generated Count => " + str(generated_count))
             print("   Expanded Count => " + str(expanded_count))
             return node
         generated_count += expand_node(node, fringe, -1)
         expanded_count += 1
+    return None
 
 def iterative_deepening_search(state, closed, num_of_dirty_rooms, layer):
     print(layer)
