@@ -122,7 +122,6 @@ def select_node(fringe):
 	return selected
 
 def uniform_graph_search(state, fringe, num_of_dirty_rooms):
-    start_time = time.time()
     expanded_count = 0
     generated_count = 0
     goal = []
@@ -130,7 +129,7 @@ def uniform_graph_search(state, fringe, num_of_dirty_rooms):
     fringe.append(state)
     while len(fringe) > 0:
         node = fringe.pop(select_node(fringe))
-        if (node.rooms_cleaned == num_of_dirty_rooms or (time.time() - start_time) > 3600):
+        if (node.rooms_cleaned == num_of_dirty_rooms):
             print("   Generated Count => " + str(generated_count))
             print("   Expanded Count => " + str(expanded_count))
             return node
@@ -141,14 +140,13 @@ def uniform_graph_search(state, fringe, num_of_dirty_rooms):
     return None
 
 def uniform_tree_search(state, fringe, num_of_dirty_rooms):
-    start_time = time.time()
     expanded_count = 0
     generated_count = 0
     goal = []
     fringe.append(state)
     while len(fringe) > 0:
         node = fringe.pop(select_node(fringe))
-        if (node.rooms_cleaned == num_of_dirty_rooms or (time.time() - start_time) > 3600):
+        if (node.rooms_cleaned == num_of_dirty_rooms):
             print("   Generated Count => " + str(generated_count))
             print("   Expanded Count => " + str(expanded_count))
             return node
@@ -217,11 +215,11 @@ def main():
 
         if (selection == 'A' or selection == 'a'):
             print('\nInstance 1 - Uniform Tree Search:')
-            start = time.time()
             instance_1 = Env(1, 1)
             instance_1.set_dirt(0, 1)
             instance_1.set_dirt(1, 3)
             instance_1.set_dirt(2, 4)
+            start = time.time()
             goal = uniform_tree_search(instance_1, [], 3)
             end = time.time()
             print_info(goal, start, end)
@@ -237,44 +235,44 @@ def main():
             print_info(goal, start, end)
         elif (selection == 'C' or selection == 'c'):
             print('\nInstance 1 - Iterative Deepening Search:')
-            start = time.time()
             instance_1 = Env(1, 1)
             instance_1.set_dirt(0, 1)
             instance_1.set_dirt(1, 3)
             instance_1.set_dirt(2, 4)
+            start = time.time()
             goal = ids(instance_1, 3)
             end = time.time()
             print_info(goal, start, end)
         elif (selection == 'D' or selection == 'd'):
             print('\nInstance 2 - Uniform Tree Search:')
-            start = time.time()
             instance_2 = Env(2, 1)
             instance_2.set_dirt(0, 1)
             instance_2.set_dirt(1, 0)
             instance_2.set_dirt(1, 3)
             instance_2.set_dirt(2, 2)
+            start = time.time()
             goal = uniform_tree_search(instance_2, [], 4)
             end = time.time()
             print_info(goal, start, end)
         elif (selection == 'E' or selection == 'e'):
             print('\nInstance 2 - Uniform Graph Search:')
-            start = time.time()
             instance_2 = Env(2, 1)
             instance_2.set_dirt(0, 1)
             instance_2.set_dirt(1, 0)
             instance_2.set_dirt(1, 3)
             instance_2.set_dirt(2, 2)
+            start = time.time()
             goal = uniform_graph_search(instance_2, [], 4)
             end = time.time()
             print_info(goal, start, end)
         elif (selection == 'F' or selection == 'f'):
             print('\nInstance 2 - Iterative Deepening Search:')
-            start = time.time()
             instance_2 = Env(2, 1)
             instance_2.set_dirt(0, 1)
             instance_2.set_dirt(1, 0)
             instance_2.set_dirt(1, 3)
             instance_2.set_dirt(2, 2)
+            start = time.time()
             goal = ids(instance_2, 4)
             end = time.time()
             print_info(goal, start, end)
