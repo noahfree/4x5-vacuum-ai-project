@@ -151,7 +151,7 @@ def uniform_graph_search(state, num_of_dirty_rooms):
     expanded_count = 0
     generated_count = 0
     goal = []
-	fringe = []
+    fringe = []
     closed = []
     fringe.append(state)
     while len(fringe) > 0:
@@ -175,7 +175,7 @@ def uniform_tree_search(state, num_of_dirty_rooms):
     expanded_count = 0
     generated_count = 0
     goal = []
-	fringe = []
+    fringe = []
     fringe.append(state)
     while len(fringe) > 0:
         node = fringe.pop(select_node(fringe))
@@ -327,7 +327,7 @@ def main():
             end = time.time()
             print_info(goal, start, end)
         elif (selection == 'G' or selection == 'g'):
-			print('\nExiting program...\n')
+            print('\nExiting program...\n')
             break
         else:
             print("Invalid input: please enter a letter A-G.")
