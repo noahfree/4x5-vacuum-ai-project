@@ -85,34 +85,42 @@ def print_state(state):
         print("")
 
 def expand_node(state, fringe, layer):
+    generated_count = 0
     if (state.matrix[state.get_X()][state.get_Y()] == 'dirty'):
         new_state = copy.deepcopy(state)
         new_state.clean_room()
         new_state.layer = layer
         fringe.append(new_state)
-        return
+        return 1
     if (state.get_Y() != 0):
         new_state = copy.deepcopy(state)
         new_state.move_left()
         new_state.layer = layer
         fringe.append(new_state)
+        generated_count += 1
     if (state.get_Y() != 4):
         new_state = copy.deepcopy(state)
         new_state.move_right()
         new_state.layer = layer
         fringe.append(new_state)
+        generated_count += 1
     if (state.get_X() != 0):
         new_state = copy.deepcopy(state)
         new_state.move_up()
         new_state.layer = layer
         fringe.append(new_state)
+        generated_count += 1
     if (state.get_X() != 3):
         new_state = copy.deepcopy(state)
         new_state.move_down()
         new_state.layer = layer
         fringe.append(new_state)
+        generated_count += 1
+    return generated_count
 
 def uniform_graph_search(state, fringe, num_of_dirty_rooms):
+    expanded_count = 0
+    generated_count = 0
     goal = []
     closed = []
     fringe.append(state)
@@ -122,26 +130,35 @@ def uniform_graph_search(state, fringe, num_of_dirty_rooms):
         fringe.sort(key=lambda x: x.total_cost)
         node = fringe.pop(0)
         if (node.rooms_cleaned == num_of_dirty_rooms):
+            print("   Generated Count => " + str(generated_count))
+            print("   Expanded Count => " + str(expanded_count))
             return node
         if (not compare_states(node, closed)):
             closed.append(node)
-            expand_node(node, fringe, -1)
+            generated_count += expand_node(node, fringe, -1)
+            expanded_count += 1
     return None
 
 def uniform_tree_search(state, fringe, num_of_dirty_rooms):
+    expanded_count = 0
+    generated_count = 0
     goal = []
     fringe.append(state)
     while True:
         #print("FRINGE COUNT: " + str(len(fringe)))
         #print("CLOSED COUNT: " + str(len(closed)) + "\n")
         if len(fringe) == 0:
+            print("   Generated Count => " + str(generated_count))
+            print("   Expanded Count => " + str(expanded_count))
             return goal
         fringe.sort(key=lambda x: x.total_cost)
         node = fringe.pop(0)
         if (node.rooms_cleaned == num_of_dirty_rooms):
-            goal.append(node)
-            return goal
-        expand_node(node, fringe, -1)
+            print("   Generated Count => " + str(generated_count))
+            print("   Expanded Count => " + str(expanded_count))
+            return node
+        generated_count += expand_node(node, fringe, -1)
+        expanded_count += 1
 
 def iterative_deepening_search(state, closed, num_of_dirty_rooms, layer):
     print(layer)
@@ -169,36 +186,36 @@ def print_info(goal, start_time, end_time):
 
 
 def main():
-    # print('\nInstance 1 - Uniform Tree Search:')
-    # start = time.time()
-    # instance_1 = Env(1, 1)
-    # instance_1.set_dirt(0, 1)
-    # instance_1.set_dirt(1, 3)
-    # instance_1.set_dirt(2, 4)
-    # goal = uniform_tree_search(instance_1, [], 3)[0]
-    # end = time.time()
-    # print_info(goal, start, end)
-
-    # print('\nInstance 1 - Uniform Graph Search:')
-    # start = time.time()
-    # instance_1 = Env(1, 1)
-    # instance_1.set_dirt(0, 1)
-    # instance_1.set_dirt(1, 3)
-    # instance_1.set_dirt(2, 4)
-    # goal = uniform_graph_search(instance_1, [], 3)
-    # end = time.time()
-    # print_info(goal, start, end)
-
-    print('\nInstance 1 - Iterative Deepening Search:')
+    print('\nInstance 1 - Uniform Tree Search:')
     start = time.time()
     instance_1 = Env(1, 1)
-    instance_1.set_dirt(1, 1)
-    # instance_1.set_dirt(0, 1)
-    # instance_1.set_dirt(1, 3)
-    # instance_1.set_dirt(2, 4)
-    goal = iterative_deepening_search(instance_1, [], 1, 0)
+    instance_1.set_dirt(0, 1)
+    instance_1.set_dirt(1, 3)
+    instance_1.set_dirt(2, 4)
+    goal = uniform_tree_search(instance_1, [], 3)
     end = time.time()
     print_info(goal, start, end)
+
+    print('\nInstance 1 - Uniform Graph Search:')
+    instance_1 = Env(1, 1)
+    instance_1.set_dirt(0, 1)
+    instance_1.set_dirt(1, 3)
+    instance_1.set_dirt(2, 4)
+    start = time.time()
+    goal = uniform_graph_search(instance_1, [], 3)
+    end = time.time()
+    print_info(goal, start, end)
+
+    # print('\nInstance 1 - Iterative Deepening Search:')
+    # start = time.time()
+    # instance_1 = Env(1, 1)
+    # instance_1.set_dirt(1, 1)
+    # # instance_1.set_dirt(0, 1)
+    # # instance_1.set_dirt(1, 3)
+    # # instance_1.set_dirt(2, 4)
+    # goal = iterative_deepening_search(instance_1, [], 1, 0)
+    # end = time.time()
+    # print_info(goal, start, end)
 
     # print('\nInstance 2 - Uniform Graph Search:')
     # start = time.time()
