@@ -156,16 +156,25 @@ def uniform_tree_search(state, fringe, num_of_dirty_rooms):
         expanded_count += 1
     return None
 
+class NodeStats:
+    def __init__(self, expanded_count, generated_count):
+        self.Expanded_count = expanded_count
+        self.Generated_count = generated_count
+
+
 def ids(init_state, num_of_dirty_rooms):
+    node_stats = NodeStats(0,0)
     depth = 0
     while True:
-        result = dls(init_state, num_of_dirty_rooms, depth)
+        result = dls(init_state, num_of_dirty_rooms, depth, node_stats)
         print("Depth " + str(depth) + " complete")
         if result != -1:  # if solution found instead of cutoff occurring
+            print("   Generated Count => " + str(node_stats.Generated_count))
+            print("   Expanded Count => " + str(node_stats.Expanded_count))
             return result
         depth += 1
 
-def dls(node, num_of_dirty_rooms, limit):
+def dls(node, num_of_dirty_rooms, limit, node_stats):
     cutoff_occurred = False
     if (node.rooms_cleaned == num_of_dirty_rooms):
         return node
@@ -173,9 +182,10 @@ def dls(node, num_of_dirty_rooms, limit):
         return -1  #cutoff reached
     else:
         successors = []
-        expand_node(node, successors, node.layer + 1)
+        node_stats.Expanded_count += 1
+        node_stats.Generated_count += expand_node(node, successors, node.layer + 1)
         for successor in successors:
-            result = dls(successor, num_of_dirty_rooms, limit)
+            result = dls(successor, num_of_dirty_rooms, limit, node_stats)
             if result == -1:
                 cutoff_occurred = True
             elif result != -1:
