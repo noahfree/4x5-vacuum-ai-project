@@ -156,7 +156,32 @@ def uniform_tree_search(state, fringe, num_of_dirty_rooms):
         expanded_count += 1
     return None
 
+def ids(init_state, num_of_dirty_rooms):
+    depth = 0
+    while True:
+        result = dls(init_state, num_of_dirty_rooms, depth)
+        print("Depth " + str(depth) + " complete")
+        if result != -1:  # if solution found instead of cutoff occurring
+            return result
+        depth += 1
 
+def dls(node, num_of_dirty_rooms, limit):
+    cutoff_occurred = False
+    if (node.rooms_cleaned == num_of_dirty_rooms):
+        return node
+    elif node.layer == limit:
+        return -1  #cutoff reached
+    else:
+        successors = []
+        expand_node(node, successors, node.layer + 1)
+        for successor in successors:
+            result = dls(successor, num_of_dirty_rooms, limit)
+            if result == -1:
+                cutoff_occurred = True
+            elif result != -1:
+                return result
+    if cutoff_occurred:
+        return -1
 
 def print_info(goal, start_time, end_time):
     print('   Goal path =>', end=' ')
@@ -194,9 +219,9 @@ def main():
     instance_1 = Env(1, 1)
     # instance_1.set_dirt(1, 1)
     instance_1.set_dirt(0, 1)
-    # instance_1.set_dirt(1, 3)
-    # instance_1.set_dirt(2, 4)
-    goal = iterative_deepening_search(instance_1, 1)
+    instance_1.set_dirt(1, 3)
+    instance_1.set_dirt(2, 4)
+    goal = ids(instance_1, 3)
     end = time.time()
     print_info(goal, start, end)
 
