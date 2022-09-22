@@ -156,8 +156,6 @@ def uniform_tree_search(state, fringe, num_of_dirty_rooms):
         expanded_count += 1
     return None
 
-
-
 def print_info(goal, start_time, end_time):
     print('   Goal path =>', end=' ')
     if goal != None:
@@ -169,59 +167,84 @@ def print_info(goal, start_time, end_time):
 
 
 def main():
-    # print('\nInstance 1 - Uniform Tree Search:')
-    # start = time.time()
-    # instance_1 = Env(1, 1)
-    # instance_1.set_dirt(0, 1)
-    # instance_1.set_dirt(1, 3)
-    # instance_1.set_dirt(2, 4)
-    # goal = uniform_tree_search(instance_1, [], 3)
-    # end = time.time()
-    # print_info(goal, start, end)
-	#
-    # print('\nInstance 1 - Uniform Graph Search:')
-    # instance_1 = Env(1, 1)
-    # instance_1.set_dirt(0, 1)
-    # instance_1.set_dirt(1, 3)
-    # instance_1.set_dirt(2, 4)
-    # start = time.time()
-    # goal = uniform_graph_search(instance_1, [], 3)
-    # end = time.time()
-    # print_info(goal, start, end)
+	while True:
+		print("\n\nChoose algorithm to run:")
+		print("  (A) Instance 1, Uniform Tree Search")
+		print("  (B) Instance 1, Uniform Graph Search")
+		print("  (C) Instance 1, Iterative Deepening Search")
+		print("  (D) Instance 2, Uniform Tree Search")
+		print("  (E) Instance 2, Uniform Graph Search")
+		print("  (F) Instance 2, Iterative Deepening Search")
+		print("  (G) Quit")
+		selection = input("Please enter a letter: ")
 
-    print('\nInstance 1 - Iterative Deepening Search:')
-    start = time.time()
-    instance_1 = Env(1, 1)
-    # instance_1.set_dirt(1, 1)
-    instance_1.set_dirt(0, 1)
-    # instance_1.set_dirt(1, 3)
-    # instance_1.set_dirt(2, 4)
-    goal = iterative_deepening_search(instance_1, 1)
-    end = time.time()
-    print_info(goal, start, end)
-
-    # print('\nInstance 2 - Uniform Graph Search:')
-    # start = time.time()
-    # instance_2 = Env(2, 1)
-    # instance_2.set_dirt(0, 1)
-    # instance_2.set_dirt(1, 0)
-    # instance_2.set_dirt(1, 3)
-    # instance_2.set_dirt(2, 2)
-    # goal = uniform_graph_search(instance_2, [], 4)
-    # end = time.time()
-    # print_info(goal, start, end)
-
-    # print('\nInstance 2 - Uniform Tree Search:')
-    # start = time.time()
-    # instance_2 = Env(2, 1)
-    # instance_2.set_dirt(0, 1)
-    # instance_2.set_dirt(1, 0)
-    # instance_2.set_dirt(1, 3)
-    # instance_2.set_dirt(2, 2)
-    # goal = uniform_tree_search(instance_2, [], 4)
-    # end = time.time()
-    # print_info(goal, start, end)
-
+		if (selection == 'A' or selection == 'a'):
+			print('\nInstance 1 - Uniform Tree Search:')
+			start = time.time()
+			instance_1 = Env(1, 1)
+			instance_1.set_dirt(0, 1)
+			instance_1.set_dirt(1, 3)
+			instance_1.set_dirt(2, 4)
+			goal = uniform_tree_search(instance_1, [], 3)
+			end = time.time()
+			print_info(goal, start, end)
+		elif (selection == 'B' or selection == 'b'):
+			print('\nInstance 1 - Uniform Graph Search:')
+			instance_1 = Env(1, 1)
+			instance_1.set_dirt(0, 1)
+			instance_1.set_dirt(1, 3)
+			instance_1.set_dirt(2, 4)
+			start = time.time()
+			goal = uniform_graph_search(instance_1, [], 3)
+			end = time.time()
+			print_info(goal, start, end)
+		elif (selection == 'C' or selection == 'c'):
+			print('\nInstance 1 - Iterative Deepening Search:')
+			start = time.time()
+			instance_1 = Env(1, 1)
+			instance_1.set_dirt(0, 1)
+			instance_1.set_dirt(1, 3)
+			instance_1.set_dirt(2, 4)
+			goal = iterative_deepening_search(instance_1, 3)
+			end = time.time()
+			print_info(goal, start, end)
+		elif (selection == 'D' or selection == 'd'):
+			print('\nInstance 2 - Uniform Tree Search:')
+			start = time.time()
+			instance_2 = Env(2, 1)
+			instance_2.set_dirt(0, 1)
+			instance_2.set_dirt(1, 0)
+			instance_2.set_dirt(1, 3)
+			instance_2.set_dirt(2, 2)
+			goal = uniform_tree_search(instance_2, [], 4)
+			end = time.time()
+			print_info(goal, start, end)
+		elif (selection == 'E' or selection == 'e'):
+			print('\nInstance 2 - Uniform Graph Search:')
+			start = time.time()
+			instance_2 = Env(2, 1)
+			instance_2.set_dirt(0, 1)
+			instance_2.set_dirt(1, 0)
+			instance_2.set_dirt(1, 3)
+			instance_2.set_dirt(2, 2)
+			goal = uniform_graph_search(instance_2, [], 4)
+			end = time.time()
+			print_info(goal, start, end)
+		elif (selection == 'F' or selection == 'f'):
+			print('\nInstance 2 - Iterative Deepening Search:')
+			start = time.time()
+			instance_2 = Env(2, 1)
+			instance_2.set_dirt(0, 1)
+			instance_2.set_dirt(1, 0)
+			instance_2.set_dirt(1, 3)
+			instance_2.set_dirt(2, 2)
+			goal = iterative_deepening_search(instance_1, 4)
+			end = time.time()
+			print_info(goal, start, end)
+		elif (selection == 'G' or selection == 'g'):
+			break
+		else:
+			print("Invalid input: please enter a letter A-G.")
 
 
 main()
