@@ -190,42 +190,52 @@ def uniform_tree_search(state, num_of_dirty_rooms):
 	# none is returned if a goal was not able to be found
     return None
 
+# For tracking number of generated and expanded nodes in recursion structure.
 class NodeStats:
     def __init__(self, expanded_count, generated_count):
         self.Expanded_count = expanded_count
         self.Generated_count = generated_count
 
-
+# Iterative deepening search: Repeatedly runs depth limited search with
+# increasing depths until a state of all rooms cleaned is achieved.
+# Is not guarenteed to find the optimal solution, as costs differ between actions.
 def ids(init_state, num_of_dirty_rooms):
     node_stats = NodeStats(0,0)
     depth = 0
     while True:
+        # Repeatedly apply depth limited search with increasing depth
         result = dls(init_state, num_of_dirty_rooms, depth, node_stats)
         print("Depth " + str(depth) + " complete")
-        if result != -1:  # if solution found instead of cutoff occurring
+        if result != -1:  # identify if solution found instead of cutoff occurring, return if found.
             print("   Generated Count => " + str(node_stats.Generated_count))
             print("   Expanded Count => " + str(node_stats.Expanded_count))
             return result
         depth += 1
 
+# Depth Limited Search: A recursive implementation of DLS as defined in class.
+# Goal states (end conditions) are states where all rooms are cleaned, or
+# the number of rooms cleaned is equivalent to the number of initially dirty rooms.
+# A value of -1 indicates a cutoff occurred. Otherwise, a goal was found and its node is returned.
 def dls(node, num_of_dirty_rooms, limit, node_stats):
     cutoff_occurred = False
     if (node.rooms_cleaned == num_of_dirty_rooms):
-        return node
+        return node  # goal node reached
     elif node.layer == limit:
-        return -1  #cutoff reached
+        return -1  # cutoff reached
     else:
         successors = []
+        # Keep track of the number of generated and expanded nodes
         node_stats.Expanded_count += 1
         node_stats.Generated_count += expand_node(node, successors, node.layer + 1)
         for successor in successors:
+            # Recursively apply depth limited search until either the cutoff depth is reached or a goal is found
             result = dls(successor, num_of_dirty_rooms, limit, node_stats)
             if result == -1:
                 cutoff_occurred = True
             elif result != -1:
-                return result
+                return result  # Passing the found goal back up through the recursive structure
     if cutoff_occurred:
-        return -1
+        return -1  # Passing indication that cutoff was hit back up through the recursive structure
 
 # print_info is used to print the goal path, cost of traversal, and execution time of the inputted node
 def print_info(goal, start_time, end_time):
