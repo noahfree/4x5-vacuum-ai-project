@@ -232,6 +232,7 @@ def print_info(goal, start_time, end_time):
     print('   Goal path =>', end=' ')
     if goal != None:
         print(goal.path)
+        print('   Number of moves => ' + str(len(goal.path)))
         print('   Cost of traversal => ' + str(goal.get_cost()))
     else:
         print('Goal path not found')
